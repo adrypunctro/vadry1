@@ -5,7 +5,7 @@
  */
 
 import System.ChannelManager;
-import Visual.Visual;
+import Clients.Visual;
 import System.Client;
 import System.MyApplicationId;
 import org.junit.After;

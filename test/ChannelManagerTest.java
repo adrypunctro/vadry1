@@ -4,10 +4,10 @@
  * and open the template in the editor.
  */
 
-import Visual.Visual;
+import Clients.Visual;
 import System.Client;
 import System.MyApplicationId;
-import Memory.Memory;
+import Clients.Memory;
 import System.ChannelManager;
 import org.junit.After;
 import org.junit.AfterClass;

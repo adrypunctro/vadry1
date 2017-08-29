@@ -1,13 +1,15 @@
-package Memory;
+package Clients;
 
 import Messages.ATPMsg;
 import Messages.MyMessageType;
-import Messages.PersonDetectedResponse;
+import Messages.PersonDetectedRequest;
 import System.MyApplicationId;
 import System.ChannelManager;
 import System.Client;
 import System.Monitor;
 import System.VA_DEBUG;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -19,13 +21,16 @@ import System.VA_DEBUG;
  *
  * @author ASimionescu
  */
-public class Memory
+public class Visual
     extends Client
 {
-    public Memory() {
-        super(MyApplicationId.MEMORY);
+    
+    public Visual()
+    {
+        super(MyApplicationId.VISUAL);
     }
-
+    
+    
     @Override
     public boolean registerClient()
     {
@@ -55,22 +60,27 @@ public class Memory
     @Override
     public boolean handleRequest(ATPMsg msg)
     {
-        VA_DEBUG.INFO("[MEMORY] handleRequest("+msg.getMsgType().name()+")", true);
+        VA_DEBUG.INFO("[VISUAL] handleRequest("+msg.getMsgType().name()+")", true, 3);
+        
         switch((MyMessageType)msg.getMsgType())
         {
-            case personDetectedRequest:
-                _handlePersonDetectedRequest(msg);
+            case personDetectedCommand:
+                _handlePersonDetectedCommand(msg);
+                break;
+                
+            case personDetectedResponse:
+                _handlePersonDetectedResponse(msg);
                 break;
             
             default:
-                VA_DEBUG.WARNING("[MEMORY] unknown message type received("+msg.getMsgType().name()+")", true);
+                VA_DEBUG.WARNING("[VISUAL] unknown message type received("+msg.getMsgType().name()+")", true);
                 return false;
         }
         
         return true;
     }
     
-    private boolean _handlePersonDetectedRequest(ATPMsg msg)
+    private boolean _handlePersonDetectedCommand(ATPMsg msg)
     {
         ChannelManager manager = ChannelManager.getInstance();
         
@@ -86,12 +96,37 @@ public class Memory
             return false;
         }
         
-        PersonDetectedResponse reply = new PersonDetectedResponse();
-        reply.setSource(MyApplicationId.MEMORY);
-        reply.setTarget(msg.getSourceId());
+        PersonDetectedRequest reply = new PersonDetectedRequest();
+        reply.setSource(MyApplicationId.VISUAL);
+        reply.setTarget(MyApplicationId.MEMORY);
         reply.setTransactionId(msg.getTransactionId());
         
         manager.send(reply);
+
+        return true;
+    }
+    
+    private boolean _handlePersonDetectedResponse(ATPMsg msg)
+    {
+        ChannelManager manager = ChannelManager.getInstance();
+        
+        if (manager == null)
+        {
+            VA_DEBUG.WARNING("[VISUAL] ChannelManager is null.", true);
+            return false;
+        }
+        
+        if (!manager.isClientRegistered(MyApplicationId.MEMORY))
+        {
+            VA_DEBUG.WARNING("[VISUAL] MEMORY is not registered.", true);
+            return false;
+        }
+        
+        //PersonDetectedRequest msg2 = new PersonDetectedRequest();
+        //msg2.setSource(ApplicationId.VISUAL);
+        //msg2.setTarget(ApplicationId.MEMORY);
+        
+        //manager.send(msg2);
 
         return true;
     }

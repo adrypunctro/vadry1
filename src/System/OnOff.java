@@ -5,11 +5,11 @@
  */
 package System;
 
-import Touch.Touch;
-import Touch.TouchMonitor;
-import Visual.VisualMonitor;
-import Visual.Visual;
-import Memory.Memory;
+import Clients.Touch;
+import Monitors.TouchMonitor;
+import Monitors.VisualMonitor;
+import Clients.Visual;
+import Clients.Memory;
 
 /**
  *

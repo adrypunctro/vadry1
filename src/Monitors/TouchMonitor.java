@@ -3,27 +3,27 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Visual;
+package Monitors;
 
-import Messages.PersonDetectedCommand;
-import System.MyApplicationId;
+import Messages.TouchDetectedCommand;
 import System.ChannelManager;
 import System.Monitor;
+import System.MyApplicationId;
 import System.VA_DEBUG;
-import java.util.concurrent.atomic.AtomicBoolean;
+import Clients.Visual;
 
 /**
  *
  * @author ASimionescu
  */
-public class VisualMonitor
+public class TouchMonitor
     extends Monitor
 {
-    
+
     @Override
     protected void _processWorker(int millisecondPeriod)
     {
-        VA_DEBUG.INFO("[VISUAL MONITOR] Monitoring started", true, 3);
+        VA_DEBUG.INFO("[TOUCH MONITOR] Monitoring started", true, 3);
         while(isAlive())
         {
             // PROCESS IMAGE
@@ -37,36 +37,36 @@ public class VisualMonitor
             
             if (detect == 0)
             {
-                VA_DEBUG.INFO("[VISUAL MONITOR] Person was detected.", true, 2);
+                VA_DEBUG.INFO("[TOUCH MONITOR] Touch was detected.", true, 2);
                 
-                _personDetected();
+                _touchDetected();
             }
         }
-        VA_DEBUG.INFO("[VISUAL MONITOR] Monitoring stopped", true, 3);
+        VA_DEBUG.INFO("[TOUCH MONITOR] Monitoring stopped", true, 3);
     }
     
-    public void _personDetected()
+    private void _touchDetected()
     {
         ChannelManager manager = ChannelManager.getInstance();
         if (manager != null)
         {
-            if (manager.isClientRegistered(MyApplicationId.VISUAL))
+            if (manager.isClientRegistered(MyApplicationId.TOUCH))
             {
-                PersonDetectedCommand msg = new PersonDetectedCommand();
-                msg.setSource(MyApplicationId.VISUAL);
-                msg.setTarget(MyApplicationId.VISUAL);
+                TouchDetectedCommand msg = new TouchDetectedCommand();
+                msg.setSource(MyApplicationId.TOUCH);
+                msg.setTarget(MyApplicationId.TOUCH);
                 msg.createTransactionId();
 
                 int transId = manager.send(msg);
             }
             else
             {
-                VA_DEBUG.WARNING("[VISUAL MONITOR] VISUAL client is not registered.", true);
+                VA_DEBUG.WARNING("[TOUCH MONITOR] TOUCH client is not registered.", true);
             }
         }
         else
         {
-            VA_DEBUG.WARNING("[VISUAL MONITOR] ChannelManager is null.", true);
+            VA_DEBUG.WARNING("[TOUCH MONITOR] ChannelManager is null.", true);
         }
     }
 }
