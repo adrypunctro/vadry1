@@ -9,7 +9,7 @@ import Messages.ATPMsg;
 import Messages.MyMessageType;
 import System.ChannelManager;
 import System.Client;
-import System.MyApplicationId;
+import System.SystemApplicationId;
 import System.VA_DEBUG;
 
 /**
@@ -22,7 +22,7 @@ public class Touch
 
     public Touch()
     {
-        super(MyApplicationId.TOUCH);
+        super(SystemApplicationId.TOUCH);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class Touch
             return false;
         }
         
-        if (!manager.isClientRegistered(MyApplicationId.MEMORY))
+        if (!manager.isClientRegistered(SystemApplicationId.MEMORY))
         {
             VA_DEBUG.WARNING("[TOUCH] MEMORY is not registered.", true);
             return false;

@@ -6,7 +6,7 @@
 
 import Clients.Visual;
 import System.Client;
-import System.MyApplicationId;
+import System.SystemApplicationId;
 import Clients.Memory;
 import System.ChannelManager;
 import org.junit.After;

@@ -3,7 +3,7 @@ package Clients;
 import Messages.ATPMsg;
 import Messages.MyMessageType;
 import Messages.PersonDetectedResponse;
-import System.MyApplicationId;
+import System.SystemApplicationId;
 import System.ChannelManager;
 import System.Client;
 import System.Monitor;
@@ -23,7 +23,7 @@ public class Memory
     extends Client
 {
     public Memory() {
-        super(MyApplicationId.MEMORY);
+        super(SystemApplicationId.MEMORY);
     }
 
     @Override
@@ -80,14 +80,14 @@ public class Memory
             return false;
         }
         
-        if (!manager.isClientRegistered(MyApplicationId.MEMORY))
+        if (!manager.isClientRegistered(SystemApplicationId.MEMORY))
         {
             VA_DEBUG.WARNING("[VISUAL] MEMORY is not registered.", true);
             return false;
         }
         
         PersonDetectedResponse reply = new PersonDetectedResponse();
-        reply.setSource(MyApplicationId.MEMORY);
+        reply.setSource(SystemApplicationId.MEMORY);
         reply.setTarget(msg.getSourceId());
         reply.setTransactionId(msg.getTransactionId());
         

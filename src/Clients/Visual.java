@@ -3,7 +3,7 @@ package Clients;
 import Messages.ATPMsg;
 import Messages.MyMessageType;
 import Messages.PersonDetectedRequest;
-import System.MyApplicationId;
+import System.SystemApplicationId;
 import System.ChannelManager;
 import System.Client;
 import System.Monitor;
@@ -27,7 +27,7 @@ public class Visual
     
     public Visual()
     {
-        super(MyApplicationId.VISUAL);
+        super(SystemApplicationId.VISUAL);
     }
     
     
@@ -90,15 +90,15 @@ public class Visual
             return false;
         }
         
-        if (!manager.isClientRegistered(MyApplicationId.MEMORY))
+        if (!manager.isClientRegistered(SystemApplicationId.MEMORY))
         {
             VA_DEBUG.WARNING("[VISUAL] MEMORY is not registered.", true);
             return false;
         }
         
         PersonDetectedRequest reply = new PersonDetectedRequest();
-        reply.setSource(MyApplicationId.VISUAL);
-        reply.setTarget(MyApplicationId.MEMORY);
+        reply.setSource(SystemApplicationId.VISUAL);
+        reply.setTarget(SystemApplicationId.MEMORY);
         reply.setTransactionId(msg.getTransactionId());
         
         manager.send(reply);
@@ -116,7 +116,7 @@ public class Visual
             return false;
         }
         
-        if (!manager.isClientRegistered(MyApplicationId.MEMORY))
+        if (!manager.isClientRegistered(SystemApplicationId.MEMORY))
         {
             VA_DEBUG.WARNING("[VISUAL] MEMORY is not registered.", true);
             return false;

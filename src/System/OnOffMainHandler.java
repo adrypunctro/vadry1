@@ -23,6 +23,12 @@ public class OnOffMainHandler
     {
         VA_DEBUG.INFO("[ONOFF] Program starting ::::::::::::::::::::::::::::::::", true, 1);
         
+        // CONFIG --------------------------------------------------------------
+        Config.APP_NAME         = "VAdry";
+        Config.APP_VERSION      = "1.0";
+        Config.PERSISTENCE_DIR  = "/data/persistency/";
+        
+        // INIT ----------------------------------------------------------------
         ONOFF.init();
         
         // SETUP ---------------------------------------------------------------

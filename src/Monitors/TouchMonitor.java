@@ -8,7 +8,7 @@ package Monitors;
 import Messages.TouchDetectedCommand;
 import System.ChannelManager;
 import System.Monitor;
-import System.MyApplicationId;
+import System.SystemApplicationId;
 import System.VA_DEBUG;
 import Clients.Visual;
 
@@ -50,11 +50,11 @@ public class TouchMonitor
         ChannelManager manager = ChannelManager.getInstance();
         if (manager != null)
         {
-            if (manager.isClientRegistered(MyApplicationId.TOUCH))
+            if (manager.isClientRegistered(SystemApplicationId.TOUCH))
             {
                 TouchDetectedCommand msg = new TouchDetectedCommand();
-                msg.setSource(MyApplicationId.TOUCH);
-                msg.setTarget(MyApplicationId.TOUCH);
+                msg.setSource(SystemApplicationId.TOUCH);
+                msg.setTarget(SystemApplicationId.TOUCH);
                 msg.createTransactionId();
 
                 int transId = manager.send(msg);
