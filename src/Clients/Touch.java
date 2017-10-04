@@ -9,8 +9,10 @@ import Messages.ATPMsg;
 import Messages.MyMessageType;
 import System.ChannelManager;
 import System.Client;
-import System.SystemApplicationId;
+import System.MyApplicationId;
+import System.OnOffState;
 import System.VA_DEBUG;
+import java.util.Observable;
 
 /**
  *
@@ -22,7 +24,7 @@ public class Touch
 
     public Touch()
     {
-        super(SystemApplicationId.TOUCH);
+        super(MyApplicationId.TOUCH);
     }
 
     @Override
@@ -79,7 +81,7 @@ public class Touch
             return false;
         }
         
-        if (!manager.isClientRegistered(SystemApplicationId.MEMORY))
+        if (!manager.isClientRegistered(MyApplicationId.MEMORY))
         {
             VA_DEBUG.WARNING("[TOUCH] MEMORY is not registered.", true);
             return false;
@@ -92,5 +94,15 @@ public class Touch
         //int transId = manager.send(msg2);
 
         return true;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void onoffState(OnOffState state) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

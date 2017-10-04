@@ -3,11 +3,13 @@ package Clients;
 import Messages.ATPMsg;
 import Messages.MyMessageType;
 import Messages.PersonDetectedRequest;
-import System.SystemApplicationId;
+import System.MyApplicationId;
 import System.ChannelManager;
 import System.Client;
 import System.Monitor;
+import System.OnOffState;
 import System.VA_DEBUG;
+import java.util.Observable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -27,7 +29,7 @@ public class Visual
     
     public Visual()
     {
-        super(SystemApplicationId.VISUAL);
+        super(MyApplicationId.VISUAL);
     }
     
     
@@ -90,15 +92,15 @@ public class Visual
             return false;
         }
         
-        if (!manager.isClientRegistered(SystemApplicationId.MEMORY))
+        if (!manager.isClientRegistered(MyApplicationId.MEMORY))
         {
             VA_DEBUG.WARNING("[VISUAL] MEMORY is not registered.", true);
             return false;
         }
         
         PersonDetectedRequest reply = new PersonDetectedRequest();
-        reply.setSource(SystemApplicationId.VISUAL);
-        reply.setTarget(SystemApplicationId.MEMORY);
+        reply.setSource(MyApplicationId.VISUAL);
+        reply.setTarget(MyApplicationId.MEMORY);
         reply.setTransactionId(msg.getTransactionId());
         
         manager.send(reply);
@@ -116,7 +118,7 @@ public class Visual
             return false;
         }
         
-        if (!manager.isClientRegistered(SystemApplicationId.MEMORY))
+        if (!manager.isClientRegistered(MyApplicationId.MEMORY))
         {
             VA_DEBUG.WARNING("[VISUAL] MEMORY is not registered.", true);
             return false;
@@ -129,5 +131,15 @@ public class Visual
         //manager.send(msg2);
 
         return true;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void onoffState(OnOffState state) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

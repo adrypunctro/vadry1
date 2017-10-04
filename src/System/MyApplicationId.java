@@ -10,8 +10,10 @@ package System;
  *
  * @author ASimionescu
  */
-public enum SystemApplicationId
-    implements ApplicationId
+public class MyApplicationId
+    extends ApplicationId
 {
-    VISUAL, MEMORY, TOUCH
+    public static final int VISUAL  = 100;
+    public static final int MEMORY  = 101;
+    public static final int TOUCH   = 102;
 }

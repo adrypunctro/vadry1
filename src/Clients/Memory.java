@@ -3,11 +3,13 @@ package Clients;
 import Messages.ATPMsg;
 import Messages.MyMessageType;
 import Messages.PersonDetectedResponse;
-import System.SystemApplicationId;
+import System.MyApplicationId;
 import System.ChannelManager;
 import System.Client;
 import System.Monitor;
+import System.OnOffState;
 import System.VA_DEBUG;
+import java.util.Observable;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -23,7 +25,7 @@ public class Memory
     extends Client
 {
     public Memory() {
-        super(SystemApplicationId.MEMORY);
+        super(MyApplicationId.MEMORY);
     }
 
     @Override
@@ -80,19 +82,29 @@ public class Memory
             return false;
         }
         
-        if (!manager.isClientRegistered(SystemApplicationId.MEMORY))
+        if (!manager.isClientRegistered(MyApplicationId.MEMORY))
         {
             VA_DEBUG.WARNING("[VISUAL] MEMORY is not registered.", true);
             return false;
         }
         
         PersonDetectedResponse reply = new PersonDetectedResponse();
-        reply.setSource(SystemApplicationId.MEMORY);
+        reply.setSource(MyApplicationId.MEMORY);
         reply.setTarget(msg.getSourceId());
         reply.setTransactionId(msg.getTransactionId());
         
         manager.send(reply);
 
         return true;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void onoffState(OnOffState state) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
