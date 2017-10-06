@@ -8,44 +8,33 @@ package Monitors;
 import Messages.PersonDetectedCommand;
 import System.MyApplicationId;
 import System.ChannelManager;
-import System.Monitor;
+import System.SensorHandler;
 import System.VA_DEBUG;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Map;
 
 /**
  *
  * @author ASimionescu
  */
-public class VisualMonitor
-    extends Monitor
+public class VisualSensorHandler
+    extends SensorHandler
 {
+    private VideoSensorMonitor sensor;
     
     @Override
-    protected void _processWorker(int millisecondPeriod)
+    public void init()
     {
-        VA_DEBUG.INFO("[VISUAL MONITOR] Monitoring started", true, 3);
-        while(isAlive())
-        {
-            // PROCESS IMAGE
-            try { Thread.sleep(500); } catch (InterruptedException e) {
-                System.out.println(e);
-            }
-            
-            int min = 0;
-            int max = 6;
-            int detect = (int) ((Math.random() * (max+1-min)) + min);
-            
-            if (detect == 0)
-            {
-                VA_DEBUG.INFO("[VISUAL MONITOR] Person was detected.", true, 2);
-                
-                _personDetected();
-            }
-        }
-        VA_DEBUG.INFO("[VISUAL MONITOR] Monitoring stopped", true, 3);
+        sensor = new VideoSensorMonitor();
+        sensor.setSensorHandler(this);
+        sensor.run();
     }
     
-    public void _personDetected()
+    /**
+     * Received data when SensorMonitor is triggered.
+     * @param data
+     */
+    @Override
+    public void change(Map<String, Object> data)
     {
         ChannelManager manager = ChannelManager.getInstance();
         if (manager != null)

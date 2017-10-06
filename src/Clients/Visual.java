@@ -6,7 +6,7 @@ import Messages.PersonDetectedRequest;
 import System.MyApplicationId;
 import System.ChannelManager;
 import System.Client;
-import System.Monitor;
+import System.SensorHandler;
 import System.OnOffState;
 import System.VA_DEBUG;
 import java.util.Observable;

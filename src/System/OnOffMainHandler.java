@@ -6,8 +6,8 @@
 package System;
 
 import Clients.Touch;
-import Monitors.TouchMonitor;
-import Monitors.VisualMonitor;
+import Monitors.TouchSensorHandler;
+import Monitors.VisualSensorHandler;
 import Clients.Visual;
 import Clients.Memory;
 
@@ -38,8 +38,8 @@ public class OnOffMainHandler
         ONOFF.registerClient(new Memory());
         ONOFF.registerClient(new Touch());
         
-        ONOFF.registerMonitor(new VisualMonitor());
-        ONOFF.registerMonitor(new TouchMonitor());
+        ONOFF.registerMonitor(new VisualSensorHandler());
+        ONOFF.registerMonitor(new TouchSensorHandler());
         
         // STARTUP -------------------------------------------------------------
         ONOFF.startup();

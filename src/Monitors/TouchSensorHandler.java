@@ -7,45 +7,39 @@ package Monitors;
 
 import Messages.TouchDetectedCommand;
 import System.ChannelManager;
-import System.Monitor;
+import System.SensorHandler;
 import System.MyApplicationId;
 import System.VA_DEBUG;
-import Clients.Visual;
+import java.util.Map;
 
 /**
  *
  * @author ASimionescu
  */
-public class TouchMonitor
-    extends Monitor
+public class TouchSensorHandler
+    extends SensorHandler
 {
+    private ForceSensorMonitor sensor;
 
-    @Override
-    protected void _processWorker(int millisecondPeriod)
+    public TouchSensorHandler()
     {
-        VA_DEBUG.INFO("[TOUCH MONITOR] Monitoring started", true, 3);
-        while(isAlive())
-        {
-            // PROCESS IMAGE
-            try { Thread.sleep(500); } catch (InterruptedException e) {
-                System.out.println(e);
-            }
-            
-            int min = 0;
-            int max = 6;
-            int detect = (int) ((Math.random() * (max+1-min)) + min);
-            
-            if (detect == 0)
-            {
-                VA_DEBUG.INFO("[TOUCH MONITOR] Touch was detected.", true, 2);
-                
-                _touchDetected();
-            }
-        }
-        VA_DEBUG.INFO("[TOUCH MONITOR] Monitoring stopped", true, 3);
+        
     }
     
-    private void _touchDetected()
+    @Override
+    public void init()
+    {
+        sensor = new ForceSensorMonitor();
+        sensor.setSensorHandler(this);
+        sensor.run();
+    }
+
+    /**
+     * Received data when SensorMonitor is triggered.
+     * @param data
+     */
+    @Override
+    public void change(Map<String, Object> data)
     {
         ChannelManager manager = ChannelManager.getInstance();
         if (manager != null)
