@@ -9,6 +9,7 @@ import Messages.PersonDetectedCommand;
 import System.MyApplicationId;
 import System.ChannelManager;
 import System.SensorHandler;
+import System.SensorsConnector;
 import System.VA_DEBUG;
 import java.util.Map;
 
@@ -20,6 +21,11 @@ public class VisualSensorHandler
     extends SensorHandler
 {
     private VideoSensorMonitor sensor;
+    
+    public VisualSensorHandler(SensorsConnector conn)
+    {
+        super(conn);
+    }
     
     @Override
     public void init()

@@ -9,6 +9,7 @@ import Messages.TouchDetectedCommand;
 import System.ChannelManager;
 import System.SensorHandler;
 import System.MyApplicationId;
+import System.SensorsConnector;
 import System.VA_DEBUG;
 import java.util.Map;
 
@@ -19,19 +20,21 @@ import java.util.Map;
 public class TouchSensorHandler
     extends SensorHandler
 {
-    private ForceSensorMonitor sensor;
+    private ForceSensorMonitor sensorsMonitor;
 
-    public TouchSensorHandler()
+    public TouchSensorHandler(SensorsConnector conn)
     {
-        
+        super(conn);
+        conn.setTouchSensorHandler(this);
     }
     
     @Override
     public void init()
     {
-        sensor = new ForceSensorMonitor();
-        sensor.setSensorHandler(this);
-        sensor.run();
+        sensorsMonitor = new ForceSensorMonitor();
+        sensorsMonitor.setConnector(getConnector());
+        sensorsMonitor.setSensorHandler(this);
+        sensorsMonitor.run();
     }
 
     /**
