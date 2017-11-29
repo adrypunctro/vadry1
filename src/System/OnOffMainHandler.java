@@ -7,9 +7,6 @@ package System;
 
 import Clients.Touch;
 import Monitors.TouchSensorHandler;
-import Monitors.VisualSensorHandler;
-import Clients.Visual;
-import Clients.Memory;
 
 /**
  *
@@ -21,6 +18,8 @@ public class OnOffMainHandler
     
     public static void run()
     {
+        VA_DEBUG.setExternOutput("localhost", 60011);
+        
         VA_DEBUG.INFO("[ONOFF] Program starting ::::::::::::::::::::::::::::::::", true, 1);
         
         // CONFIG --------------------------------------------------------------
