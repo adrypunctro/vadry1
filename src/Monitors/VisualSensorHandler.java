@@ -6,6 +6,7 @@
 package Monitors;
 
 import Messages.PersonDetectedCommand;
+import Messages.ProcessVideoDataCommand;
 import System.MyApplicationId;
 import System.ChannelManager;
 import System.SensorHandler;
@@ -47,9 +48,10 @@ public class VisualSensorHandler
         {
             if (manager.isClientRegistered(MyApplicationId.VISUAL))
             {
-                PersonDetectedCommand msg = new PersonDetectedCommand();
+                ProcessVideoDataCommand msg = new ProcessVideoDataCommand();
                 msg.setSource(MyApplicationId.VISUAL);
                 msg.setTarget(MyApplicationId.VISUAL);
+                msg.setRawData((String)data.get("RawData"));
                 msg.createTransactionId();
 
                 int transId = manager.send(msg);

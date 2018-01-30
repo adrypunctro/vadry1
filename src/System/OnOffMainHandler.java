@@ -5,7 +5,7 @@
  */
 package System;
 
-import Clients.Touch;
+import Clients.*;
 import Monitors.TouchSensorHandler;
 
 /**
@@ -18,21 +18,24 @@ public class OnOffMainHandler
     
     public static void run()
     {
-        VA_DEBUG.setExternOutput("localhost", 60011);
+        VA_DEBUG.sendLogsToAddress("localhost", 60011);
         
         VA_DEBUG.INFO("[ONOFF] Program starting ::::::::::::::::::::::::::::::::", true, 1);
         
         // CONFIG --------------------------------------------------------------
         Config.APP_NAME         = "VAdry";
+        VA_DEBUG.INFO("[ONOFF] APP_NAME: "+Config.APP_NAME, true, 1);
         Config.APP_VERSION      = "1.0";
+        VA_DEBUG.INFO("[ONOFF] APP_VERSION: "+Config.APP_VERSION, true, 1);
         Config.PERSISTENCE_DIR  = "/data/persistency/";
+        VA_DEBUG.INFO("[ONOFF] PERSISTENCE_DIR: "+Config.PERSISTENCE_DIR, true, 1);
         
         // INIT ----------------------------------------------------------------
         ONOFF.init();
         
         // SETUP ---------------------------------------------------------------
         ONOFF.setPersistentFiles(MyPersistentFile.class);
-        
+
         //ONOFF.registerClient(new Visual());
         //ONOFF.registerClient(new Memory());
         ONOFF.registerClient(new Touch());

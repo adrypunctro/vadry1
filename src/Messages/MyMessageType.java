@@ -20,6 +20,7 @@ public enum MyMessageType
     onoffShutdownRequest,
     onoffShutdownResponse,
     
+    processVideoDataCommand,
     personDetectedCommand,
     personDetectedRequest,
     personDetectedResponse,
