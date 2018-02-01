@@ -26,6 +26,7 @@ public class VisualSensorHandler
     public VisualSensorHandler(SensorsConnector conn)
     {
         super(conn);
+        conn.setVideoSensorHandler(this);
     }
     
     @Override
@@ -44,26 +45,29 @@ public class VisualSensorHandler
     public void change(Map<String, Object> data)
     {
         ChannelManager manager = ChannelManager.getInstance();
-        if (manager != null)
-        {
-            if (manager.isClientRegistered(MyApplicationId.VISUAL))
-            {
-                ProcessVideoDataCommand msg = new ProcessVideoDataCommand();
-                msg.setSource(MyApplicationId.VISUAL);
-                msg.setTarget(MyApplicationId.VISUAL);
-                msg.setRawData((String)data.get("RawData"));
-                msg.createTransactionId();
-
-                int transId = manager.send(msg);
-            }
-            else
-            {
-                VA_DEBUG.WARNING("[VISUAL MONITOR] VISUAL client is not registered.", true);
-            }
-        }
-        else
+        if (manager == null)
         {
             VA_DEBUG.WARNING("[VISUAL MONITOR] ChannelManager is null.", true);
+            return;
+        }
+        if (!manager.isClientRegistered(MyApplicationId.VISUAL))
+        {
+            VA_DEBUG.WARNING("[VISUAL MONITOR] VISUAL client is not registered.", true);
+            return;
+        }
+        
+        try
+        {
+            ProcessVideoDataCommand msg = new ProcessVideoDataCommand();
+            msg.setSource(MyApplicationId.VISUAL);
+            msg.setTarget(MyApplicationId.VISUAL);
+            msg.setRawData((String)data.get("rawData"));
+            msg.createTransactionId();
+            int transId = manager.send(msg);
+        }
+        catch(Exception e)
+        {
+            VA_DEBUG.WARNING("[VISUAL MONITOR] Failed create ProcessVideoDataCommand because wrong data received="+data.toString(), true);
         }
     }
 }

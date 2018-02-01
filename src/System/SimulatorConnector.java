@@ -10,7 +10,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -19,8 +27,9 @@ import java.util.Map;
 public class SimulatorConnector
     extends SensorsConnector
 {
-    private final int port; 
-    private SensorHandler handler;
+    private final int port;
+    private SensorHandler handlerTouch = null;
+    private SensorHandler handlerVideo = null;
     
     public SimulatorConnector(int port)
     {
@@ -30,28 +39,91 @@ public class SimulatorConnector
     @Override
     public void setTouchSensorHandler(SensorHandler handler)
     {
-        this.handler = handler;
+        this.handlerTouch = handler;
+    }
+    
+    @Override
+    public void setVideoSensorHandler(SensorHandler handler)
+    {
+        this.handlerVideo = handler;
     }
     
     @Override
     public void run()
     {
         ServerSocket ss;
-        try {
+        try
+        {
             ss = new ServerSocket(port);
-            
             Socket s = ss.accept();
-            
             BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
             String line = null;
-            while ((line = in.readLine()) != null) {
-                // TODO: mesjul trebuie dat handlerului caruia ii corespunde semnalul
-                Map<String, Object> data = null;
-                handler.change(data);
-                //System.out.println(line);
+            while ((line = in.readLine()) != null)
+            {
+                VA_DEBUG.INFO("[SimulatorConnector] Received message="+line, true, 1);
+                Packet packet = decode(line);
+                switch(packet.appId)
+                {
+                    case PacketSensorId.TOUCH1:
+                        if (handlerTouch != null) {
+                            handlerTouch.change(packet.data);
+                        }
+                        else {
+                            VA_DEBUG.WARNING("[SimulatorConnector] No handlerTouch.", true, 1);
+                        }
+                        break;
+                    case PacketSensorId.CAMERA1:
+                        if (handlerVideo != null) {
+                            handlerVideo.change(packet.data);
+                        }
+                        else {
+                            VA_DEBUG.WARNING("[SimulatorConnector] No handlerVideo.", true, 1);
+                        }
+                        break;
+                    default:
+                        VA_DEBUG.WARNING("[SimulatorConnector] Unknown appId="+packet.appId, true, 1);
+                        break;
+                }
+
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+    
+    private Packet decode(String buffer)
+    {
+        Packet packet = new Packet();
+        JSONParser parser = new JSONParser();
+        try
+        {
+            Object obj = parser.parse(buffer);
+            JSONObject jsonObject = (JSONObject) obj;
+            packet.appId = (int)(long)jsonObject.get("appId");
+            JSONObject dataObj = (JSONObject) jsonObject.get("data");
+            for (Object key : dataObj.keySet()) {
+                String sKey = (String)key;
+                packet.data.put(sKey, dataObj.get(sKey));
+            }
+        }
+        catch (ParseException e) {
+            VA_DEBUG.INFO("[SimulatorConnector] Failed decode this msg="+buffer, true, 1);
+        }
+        
+        return packet;
+    }
+    
+    private class Packet
+    {
+        public int appId = 0;
+        public Map<String, Object> data = new HashMap<>();
+    }
+    
+    private class PacketSensorId
+    {
+        public final static int TOUCH1 = 1029;
+        public final static int CAMERA1 = 829;
+    
+    }
+    
 }

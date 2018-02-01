@@ -45,25 +45,21 @@ public class TouchSensorHandler
     public void change(Map<String, Object> data)
     {
         ChannelManager manager = ChannelManager.getInstance();
-        if (manager != null)
-        {
-            if (manager.isClientRegistered(MyApplicationId.TOUCH))
-            {
-                TouchDetectedCommand msg = new TouchDetectedCommand();
-                msg.setSource(MyApplicationId.TOUCH);
-                msg.setTarget(MyApplicationId.TOUCH);
-                msg.createTransactionId();
-
-                int transId = manager.send(msg);
-            }
-            else
-            {
-                VA_DEBUG.WARNING("[TOUCH MONITOR] TOUCH client is not registered.", true);
-            }
-        }
-        else
+        if (manager == null)
         {
             VA_DEBUG.WARNING("[TOUCH MONITOR] ChannelManager is null.", true);
+            return;
         }
+        if (!manager.isClientRegistered(MyApplicationId.TOUCH))
+        {
+            VA_DEBUG.WARNING("[TOUCH MONITOR] TOUCH client is not registered.", true);
+            return;
+        }
+        
+        TouchDetectedCommand msg = new TouchDetectedCommand();
+        msg.setSource(MyApplicationId.TOUCH);
+        msg.setTarget(MyApplicationId.TOUCH);
+        msg.createTransactionId();
+        manager.send(msg);
     }
 }

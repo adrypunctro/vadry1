@@ -7,6 +7,7 @@ package System;
 
 import Clients.*;
 import Monitors.TouchSensorHandler;
+import Monitors.VisualSensorHandler;
 
 /**
  *
@@ -36,15 +37,14 @@ public class OnOffMainHandler
         // SETUP ---------------------------------------------------------------
         ONOFF.setPersistentFiles(MyPersistentFile.class);
 
-        //ONOFF.registerClient(new Visual());
+        ONOFF.registerClient(new Visual());
         //ONOFF.registerClient(new Memory());
         ONOFF.registerClient(new Touch());
         
         SensorsConnector sensorsConn = new SimulatorConnector(60010);
         
-        //ONOFF.registerMonitor(new VisualSensorHandler(sensorsConn));
+        ONOFF.registerMonitor(new VisualSensorHandler(sensorsConn));
         ONOFF.registerMonitor(new TouchSensorHandler(sensorsConn));
-        
         
         // STARTUP -------------------------------------------------------------
         ONOFF.startup();
