@@ -5,6 +5,7 @@
  */
 package System;
 
+import System.TCPClient.Callback;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -51,12 +52,9 @@ public class SimulatorConnector
     @Override
     public void run()
     {
-        ServerSocket ss;
-        try
-        {
-            ss = new ServerSocket(port);
-            Socket s = ss.accept();
-            BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+        TCPClient conn = new TCPClient();
+        conn.setCallback((BufferedReader in) -> {
+            VA_DEBUG.INFO("[SimulatorConnector] Start reading input buffer.", true, 1);
             String line = null;
             while ((line = in.readLine()) != null)
             {
@@ -84,11 +82,11 @@ public class SimulatorConnector
                         VA_DEBUG.WARNING("[SimulatorConnector] Unknown appId="+packet.appId, true, 1);
                         break;
                 }
-
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        });
+        conn.setConfig("", port);
+        conn.setName("SimulatorConnector");
+        conn.connect();
     }
     
     private Packet decode(String buffer)
