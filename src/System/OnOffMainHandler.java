@@ -19,7 +19,7 @@ public class OnOffMainHandler
     
     public static void run()
     {
-        VA_DEBUG.sendLogsToAddress("localhost", 60011);
+        VA_DEBUG.sendLogsToAddress("localhost", 60020);
         
         VA_DEBUG.INFO("[ONOFF] Program starting ::::::::::::::::::::::::::::::::", true, 1);
         

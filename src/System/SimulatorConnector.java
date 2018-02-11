@@ -5,18 +5,8 @@
  */
 package System;
 
-import System.TCPClient.Callback;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -52,41 +42,50 @@ public class SimulatorConnector
     @Override
     public void run()
     {
-        TCPClient conn = new TCPClient();
-        conn.setCallback((BufferedReader in) -> {
-            VA_DEBUG.INFO("[SimulatorConnector] Start reading input buffer.", true, 1);
-            String line = null;
-            while ((line = in.readLine()) != null)
+        TCPManager conn = new TCPManager(TCPManager.CLIENT);
+        conn.setConfig("localhost", port);
+        conn.setName("SimulatorConnector");
+        conn.asyncConnect();
+        new Thread()
+        {
+            @Override
+            public void run()
             {
-                VA_DEBUG.INFO("[SimulatorConnector] Received message="+line, true, 1);
-                Packet packet = decode(line);
-                switch(packet.appId)
+                while(true)
                 {
-                    case PacketSensorId.TOUCH1:
-                        if (handlerTouch != null) {
-                            handlerTouch.change(packet.data);
+                    String msg = conn.readMessage();
+                    VA_DEBUG.INFO("[SimulatorConnector] Received message="+msg, true, 1);
+                    if (msg != null)
+                    {
+                        VA_DEBUG.INFO("[SimulatorConnector] Received message="+msg, true, 1);
+                        Packet packet = decode(msg);
+                        switch(packet.appId)
+                        {
+                            case PacketSensorId.TOUCH1:
+                                if (handlerTouch != null) {
+                                    handlerTouch.change(packet.data);
+                                }
+                                else {
+                                    VA_DEBUG.WARNING("[SimulatorConnector] No handlerTouch.", true, 1);
+                                }
+                                break;
+                            case PacketSensorId.CAMERA1:
+                                if (handlerVideo != null) {
+                                    handlerVideo.change(packet.data);
+                                }
+                                else {
+                                    VA_DEBUG.WARNING("[SimulatorConnector] No handlerVideo.", true, 1);
+                                }
+                                break;
+                            default:
+                                VA_DEBUG.WARNING("[SimulatorConnector] Unknown appId="+packet.appId, true, 1);
+                                break;
                         }
-                        else {
-                            VA_DEBUG.WARNING("[SimulatorConnector] No handlerTouch.", true, 1);
-                        }
-                        break;
-                    case PacketSensorId.CAMERA1:
-                        if (handlerVideo != null) {
-                            handlerVideo.change(packet.data);
-                        }
-                        else {
-                            VA_DEBUG.WARNING("[SimulatorConnector] No handlerVideo.", true, 1);
-                        }
-                        break;
-                    default:
-                        VA_DEBUG.WARNING("[SimulatorConnector] Unknown appId="+packet.appId, true, 1);
-                        break;
+
+                    }
                 }
             }
-        });
-        conn.setConfig("", port);
-        conn.setName("SimulatorConnector");
-        conn.connect();
+        }.start();
     }
     
     private Packet decode(String buffer)
