@@ -9,7 +9,15 @@ import System.ChannelManager;
 import System.Client;
 import System.SensorHandler;
 import System.OnOffState;
+import System.TCPManager;
 import System.VA_DEBUG;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Ellipse2D;
+import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -102,14 +110,32 @@ public class Visual
             VA_DEBUG.WARNING("[VISUAL] MEMORY is not registered.", true);
             return false;
         }
-        
+        VA_DEBUG.WARNING("[VISUAL] HERE 1.", true);
         String rawData = msg.getRawData();
         
-        VA_DEBUG.WARNING("[VISUAL] Process image buffer("+rawData+").", true);
+        //VA_DEBUG.WARNING("[VISUAL] Process image buffer("+rawData+").", true);
         // TODO: process image
         // TODO: detect person
         //
+        BufferedImage imagebuff = TCPManager.decodeToImage(rawData);
+        Graphics2D g2d = imagebuff.createGraphics();
+        g2d.setColor(Color.red);
+        g2d.fill(new Ellipse2D.Float(0, 0, 200, 100));
+        g2d.dispose();
         
+        String rawData2 = TCPManager.encodeToString(imagebuff, "jpg");
+        {
+            Map<String, String> data = new HashMap<>();
+            data.put("value", rawData2);
+            VA_DEBUG.SOCKET_MSG(20, "image", data);
+        }
+        {
+            Map<String, String> data = new HashMap<>();
+            data.put("image", rawData2);
+            data.put("firstname", "Adrian");
+            data.put("lastname", "Simionescu");
+            VA_DEBUG.SOCKET_MSG(30, "profile", data);
+        }
         
 //        PersonDetectedRequest reply = new PersonDetectedRequest();
 //        reply.setSource(MyApplicationId.VISUAL);

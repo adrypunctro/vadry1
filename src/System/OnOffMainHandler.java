@@ -38,7 +38,7 @@ public class OnOffMainHandler
         ONOFF.setPersistentFiles(MyPersistentFile.class);
 
         ONOFF.registerClient(new Visual());
-        //ONOFF.registerClient(new Memory());
+        ONOFF.registerClient(new Memory());
         ONOFF.registerClient(new Touch());
         
         SensorsConnector sensorsConn = new SimulatorConnector(60010);

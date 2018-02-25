@@ -54,11 +54,10 @@ public class SimulatorConnector
                 while(true)
                 {
                     String msg = conn.readMessage();
-                    VA_DEBUG.INFO("[SimulatorConnector] Received message="+msg, true, 1);
                     if (msg != null)
                     {
                         VA_DEBUG.INFO("[SimulatorConnector] Received message="+msg, true, 1);
-                        Packet packet = decode(msg);
+                        TCPManager.Packet packet = TCPManager.unpack(msg);
                         switch(packet.appId)
                         {
                             case PacketSensorId.TOUCH1:
@@ -77,6 +76,9 @@ public class SimulatorConnector
                                     VA_DEBUG.WARNING("[SimulatorConnector] No handlerVideo.", true, 1);
                                 }
                                 break;
+                            case 8:// PING
+                                
+                                break;
                             default:
                                 VA_DEBUG.WARNING("[SimulatorConnector] Unknown appId="+packet.appId, true, 1);
                                 break;
@@ -86,34 +88,6 @@ public class SimulatorConnector
                 }
             }
         }.start();
-    }
-    
-    private Packet decode(String buffer)
-    {
-        Packet packet = new Packet();
-        JSONParser parser = new JSONParser();
-        try
-        {
-            Object obj = parser.parse(buffer);
-            JSONObject jsonObject = (JSONObject) obj;
-            packet.appId = (int)(long)jsonObject.get("appId");
-            JSONObject dataObj = (JSONObject) jsonObject.get("data");
-            for (Object key : dataObj.keySet()) {
-                String sKey = (String)key;
-                packet.data.put(sKey, dataObj.get(sKey));
-            }
-        }
-        catch (ParseException e) {
-            VA_DEBUG.INFO("[SimulatorConnector] Failed decode this msg="+buffer, true, 1);
-        }
-        
-        return packet;
-    }
-    
-    private class Packet
-    {
-        public int appId = 0;
-        public Map<String, Object> data = new HashMap<>();
     }
     
     private class PacketSensorId
