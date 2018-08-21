@@ -1,0 +1,7 @@
+{
+    "console-socket-address" : "",
+    "console-socket-port": 5000,
+
+    "sensor-camera-socket-address" : "192.168.0.104",
+    "sensor-camera-socket-port": 5001
+}

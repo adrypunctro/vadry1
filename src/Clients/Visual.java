@@ -7,11 +7,9 @@ import Messages.ProcessVideoDataCommand;
 import System.MyApplicationId;
 import System.ChannelManager;
 import System.Client;
-import System.SensorHandler;
 import System.OnOffState;
 import System.TCPManager;
 import System.VA_DEBUG;
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
@@ -19,7 +17,6 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 
 /*
