@@ -16,4 +16,5 @@ public class MyApplicationId
     public static final int VISUAL  = 100;
     public static final int MEMORY  = 101;
     public static final int TOUCH   = 102;
+    public static final int MOTION  = 103;
 }

@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
  *
  * @author adryp
  */
-interface CameraCapture {
+public interface CameraCapture {
 
     public boolean init(String buff, boolean grayscape);
     public BufferedImage image();

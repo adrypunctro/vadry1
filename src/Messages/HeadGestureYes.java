@@ -9,12 +9,12 @@ package Messages;
  *
  * @author ASimionescu
  */
-public class PersonDetectedCommand
+public class HeadGestureYes
     extends ATPMsg
 {
     
-    public PersonDetectedCommand() {
-        super(MyMessageType.personDetectedCommand);
+    public HeadGestureYes() {
+        super(MyMessageType.headGestureYes);
     }
     
 }

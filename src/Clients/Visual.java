@@ -2,7 +2,6 @@ package Clients;
 
 import Messages.ATPMsg;
 import Messages.MyMessageType;
-import Messages.PersonDetectedRequest;
 import Messages.ProcessVideoDataCommand;
 import System.MyApplicationId;
 import System.ChannelManager;
@@ -75,12 +74,8 @@ public class Visual
             case processVideoDataCommand:
                 _handleProcessVideoData((ProcessVideoDataCommand)msg);
                 break;
-            
-            case personDetectedCommand:
-                _handlePersonDetectedCommand(msg);
-                break;
                 
-            case personDetectedResponse:
+            case messageResponse:
                 _handlePersonDetectedResponse(msg);
                 break;
             
@@ -140,32 +135,6 @@ public class Visual
 //        reply.setTransactionId(msg.getTransactionId());
 //        
 //        manager.send(reply);
-
-        return true;
-    }
-    
-    private boolean _handlePersonDetectedCommand(ATPMsg msg)
-    {
-        ChannelManager manager = ChannelManager.getInstance();
-        
-        if (manager == null)
-        {
-            VA_DEBUG.WARNING("[VISUAL] ChannelManager is null.", true);
-            return false;
-        }
-        
-        if (!manager.isClientRegistered(MyApplicationId.MEMORY))
-        {
-            VA_DEBUG.WARNING("[VISUAL] MEMORY is not registered.", true);
-            return false;
-        }
-        
-        PersonDetectedRequest reply = new PersonDetectedRequest();
-        reply.setSource(MyApplicationId.VISUAL);
-        reply.setTarget(MyApplicationId.MEMORY);
-        reply.setTransactionId(msg.getTransactionId());
-        
-        manager.send(reply);
 
         return true;
     }

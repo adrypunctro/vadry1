@@ -5,14 +5,25 @@
  */
 package Monitors;
 
-import Messages.PersonDetectedCommand;
+import Messages.HeadGestureYes;
 import Messages.ProcessVideoDataCommand;
 import System.MyApplicationId;
 import System.ChannelManager;
 import System.SensorHandler;
 import System.SensorsConnector;
 import System.VA_DEBUG;
-import java.util.Map;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import System.CameraCapture;
+import System.RaspberryPiCapture;
 
 /**
  *
@@ -21,7 +32,7 @@ import java.util.Map;
 public class VisualSensorHandler
     extends SensorHandler
 {
-    private VideoSensorMonitor sensor;
+    private CameraMonitor sensor;
     
     public VisualSensorHandler(SensorsConnector conn)
     {
@@ -29,22 +40,9 @@ public class VisualSensorHandler
         conn.setVideoSensorHandler(this);
     }
     
-    @Override
     public void init()
     {
-        sensor = new VideoSensorMonitor();
-        sensor.setSensorHandler(this);
-        sensor.run();
-    }
-    
-    /**
-     * Received data when SensorMonitor is triggered.
-     * @param data
-     */
-    @Override
-    public void change(Map<String, Object> data)
-    {
-        ChannelManager manager = ChannelManager.getInstance();
+        manager = ChannelManager.getInstance();
         if (manager == null)
         {
             VA_DEBUG.WARNING("[VISUAL MONITOR] ChannelManager is null.", true);
@@ -55,13 +53,38 @@ public class VisualSensorHandler
             VA_DEBUG.WARNING("[VISUAL MONITOR] VISUAL client is not registered.", true);
             return;
         }
+    }
+    
+    /**
+     * Received data when SensorMonitor is triggered.
+     * @param capture
+     * @param data
+     */
+    @Override
+    public void handle(Object data)
+    {
+        CameraCapture capture = (CameraCapture)data;
+        System.out.println(capture.toString());
+        final BufferedImage image = capture.image();
+
+        // Person identify
+        
+        JFrame frame = new JFrame("ColorPan");
+        frame.getContentPane().add(new JComponent() {
+            @Override
+            public void paint(Graphics g) {
+                g.drawImage(image, 0, 0, this);
+            }
+        });
+        frame.setSize(300, 300);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
         
         try
         {
-            ProcessVideoDataCommand msg = new ProcessVideoDataCommand();
+            HeadGestureYes msg = new HeadGestureYes();
             msg.setSource(MyApplicationId.VISUAL);
-            msg.setTarget(MyApplicationId.VISUAL);
-            msg.setRawData((String)data.get("rawData"));
+            msg.setTarget(MyApplicationId.MOTION);
             msg.createTransactionId();
             int transId = manager.send(msg);
         }
@@ -70,4 +93,6 @@ public class VisualSensorHandler
             VA_DEBUG.WARNING("[VISUAL MONITOR] Failed create ProcessVideoDataCommand because wrong data received="+data.toString(), true);
         }
     }
+    
+    private ChannelManager manager = null;
 }

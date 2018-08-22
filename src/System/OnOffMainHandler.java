@@ -6,7 +6,6 @@
 package System;
 
 import Clients.*;
-import Monitors.TouchSensorHandler;
 import Monitors.VisualSensorHandler;
 
 /**
@@ -19,17 +18,31 @@ public class OnOffMainHandler
     
     public static void run()
     {
-        VA_DEBUG.sendLogsToAddress("localhost", 60020);
+        Configurator conf = new Configurator();
+        boolean configLoaded = conf.load();
+        if (!configLoaded)
+        {
+            VA_DEBUG.INFO("[ONOFF] Program can't start. Failed load config!", true, 1);
+            return;
+        }
         
-        VA_DEBUG.INFO("[ONOFF] Program starting ::::::::::::::::::::::::::::::::", true, 1);
+        if (conf.GetBool("console-socket-allow"))
+        {
+            VA_DEBUG.sendLogsToAddress(conf.GetString("console-socket-address"), conf.GetInt("console-socket-port"));
+        }
+        
+        VA_DEBUG.INFO("[ONOFF] Program config ::::::::::::::::::::::::::::::::::", true, 1);
         
         // CONFIG --------------------------------------------------------------
-        Config.APP_NAME         = "VAdry";
-        VA_DEBUG.INFO("[ONOFF] APP_NAME: "+Config.APP_NAME, true, 1);
-        Config.APP_VERSION      = "1.0";
-        VA_DEBUG.INFO("[ONOFF] APP_VERSION: "+Config.APP_VERSION, true, 1);
-        Config.PERSISTENCE_DIR  = "/data/persistency/";
-        VA_DEBUG.INFO("[ONOFF] PERSISTENCE_DIR: "+Config.PERSISTENCE_DIR, true, 1);
+        VA_DEBUG.INFO("[ONOFF] APP_NAME: "+conf.GetString("app-name"), true, 1);
+        VA_DEBUG.INFO("[ONOFF] APP_VERSION: "+conf.getDouble("app-version"), true, 1);
+        VA_DEBUG.INFO("[ONOFF] PERSISTENCE_DIR: "+conf.GetString("path-persistence-dir"), true, 1);
+        VA_DEBUG.INFO("[ONOFF] CONSOLE_SOCKET_ALLOW: "+conf.GetBool("console-socket-allow"), true, 1);
+        VA_DEBUG.INFO("[ONOFF] CONSOLE_SOCKET_ADDRESS: "+conf.GetString("console-socket-address"), true, 1);
+        VA_DEBUG.INFO("[ONOFF] CONSOLE_SOCKET_PORT: "+conf.GetInt("console-socket-port"), true, 1);
+        VA_DEBUG.INFO("[ONOFF] CAMERA_SOCKET_ALLOW: "+conf.GetBool("camera-socket-allow"), true, 1);
+        VA_DEBUG.INFO("[ONOFF] CAMERA_SOCKET_ADDRESS: "+conf.GetString("camera-socket-address"), true, 1);
+        VA_DEBUG.INFO("[ONOFF] CAMERA_SOCKET_PORT: "+conf.GetInt("camera-socket-port"), true, 1);
         
         // INIT ----------------------------------------------------------------
         ONOFF.init();
@@ -45,7 +58,6 @@ public class OnOffMainHandler
         SensorsConnector sensorsConn = new RobotConnector("192.168.0.104", 5001);
         
         ONOFF.registerMonitor(new VisualSensorHandler(sensorsConn));
-        ONOFF.registerMonitor(new TouchSensorHandler(sensorsConn));
         
         // STARTUP -------------------------------------------------------------
         ONOFF.startup();

@@ -1,7 +1,14 @@
 {
+    "app-name" : "vadry",
+    "app-version" : 1.0,
+
+    "path-persistence-dir" : "/data/persistency/",
+
+    "console-socket-allow" : true,
     "console-socket-address" : "",
     "console-socket-port": 5000,
 
-    "sensor-camera-socket-address" : "192.168.0.104",
-    "sensor-camera-socket-port": 5001
+    "camera-socket-allow" : true,
+    "camera-socket-address" : "192.168.0.104",
+    "camera-socket-port": 5001
 }

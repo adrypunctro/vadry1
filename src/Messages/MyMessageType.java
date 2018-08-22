@@ -21,9 +21,9 @@ public enum MyMessageType
     onoffShutdownResponse,
     
     processVideoDataCommand,
-    personDetectedCommand,
-    personDetectedRequest,
-    personDetectedResponse,
+    headGestureYes,
+    headGestureNo,
+    messageResponse,
     
     touchDetectedCommand
 }

@@ -7,9 +7,6 @@ package System;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -62,7 +59,7 @@ public class SimulatorConnector
                         {
                             case PacketSensorId.TOUCH1:
                                 if (handlerTouch != null) {
-                                    handlerTouch.change(packet.data);
+                                    //handlerTouch.change(packet.data);
                                 }
                                 else {
                                     VA_DEBUG.WARNING("[SimulatorConnector] No handlerTouch.", true, 1);
@@ -70,7 +67,7 @@ public class SimulatorConnector
                                 break;
                             case PacketSensorId.CAMERA1:
                                 if (handlerVideo != null) {
-                                    handlerVideo.change(packet.data);
+                                    //handlerVideo.change(packet.data);
                                 }
                                 else {
                                     VA_DEBUG.WARNING("[SimulatorConnector] No handlerVideo.", true, 1);

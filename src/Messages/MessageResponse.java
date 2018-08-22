@@ -9,12 +9,12 @@ package Messages;
  *
  * @author ASimionescu
  */
-public class PersonDetectedRequest
+public class MessageResponse
     extends ATPMsg
 {
     
-    public PersonDetectedRequest() {
-        super(MyMessageType.personDetectedRequest);
+    public MessageResponse() {
+        super(MyMessageType.messageResponse);
     }
     
 }

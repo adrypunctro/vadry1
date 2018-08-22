@@ -13,8 +13,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 
@@ -27,6 +25,8 @@ public class RobotConnector
 {
     private final int port;
     private final String address;
+    
+    private SensorHandler videoHandler = null;
 
     public RobotConnector(String address, int port)
     {
@@ -43,7 +43,7 @@ public class RobotConnector
     @Override
     public void setVideoSensorHandler(SensorHandler handler)
     {
-        
+        videoHandler = handler;
     }
 
     @Override
@@ -68,19 +68,14 @@ public class RobotConnector
                             boolean ok = capture.init(line, true);
                             if (ok)
                             {
-                                System.out.println(capture.toString());
-                                final BufferedImage image = capture.image();
-
-                                JFrame frame = new JFrame("ColorPan");
-                                frame.getContentPane().add(new JComponent() {
-                                    @Override
-                                    public void paint(Graphics g) {
-                                        g.drawImage(image, 0, 0, this);
-                                    }
-                                });
-                                frame.setSize(300, 300);
-                                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                                frame.setVisible(true);
+                                if (videoHandler != null)
+                                {
+                                    videoHandler.handle(capture);
+                                }
+                                else
+                                {
+                                    VA_DEBUG.WARNING("[CONNECTOR] VideoHandler is null!!", true, 1);
+                                }
                             }
                             else
                             {

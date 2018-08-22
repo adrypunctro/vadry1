@@ -14,7 +14,7 @@ public class PersonDetectedResponse
 {
     
     public PersonDetectedResponse() {
-        super(MyMessageType.personDetectedResponse);
+        super(MyMessageType.messageResponse);
     }
     
 }
