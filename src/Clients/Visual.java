@@ -1,5 +1,7 @@
 package Clients;
 
+import Defines.CameraCapture;
+import Defines.HeadGestureYes;
 import Messages.ATPMsg;
 import Defines.MyMessageType;
 import Defines.ProcessVideoDataCommand;
@@ -10,12 +12,15 @@ import System.OnOffState;
 import System.TCPManager;
 import System.VA_DEBUG;
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
 
 
 /*
@@ -41,27 +46,13 @@ public class Visual
     @Override
     public boolean registerClient()
     {
-        ChannelManager manager = ChannelManager.getInstance();
-        
-        if (manager != null)
-        {
-            return manager.registerClient(this);
-        }
-        
-        return false;
+        return manager.registerClient(this);
     }
     
     @Override
     public boolean unregisterClient()
     {
-        ChannelManager manager = ChannelManager.getInstance();
-        
-        if (manager != null)
-        {
-            return manager.unregisterClient(this);
-        }
-        
-        return false;
+        return manager.unregisterClient(this);
     }
     
     @Override
@@ -87,16 +78,46 @@ public class Visual
         return true;
     }
     
+    public void handle(CameraCapture capture)
+    {
+        final BufferedImage image = capture.image();
+
+        // Person identify
+        
+        JFrame frame = new JFrame("ColorPan");
+        frame.getContentPane().add(new JComponent() {
+            @Override
+            public void paint(Graphics g) {
+                g.drawImage(image, 0, 0, this);
+            }
+        });
+        frame.setSize(300, 300);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+        
+        
+        try
+        {
+
+            HeadGestureYes msg = new HeadGestureYes();
+            msg.setSource(MyApplicationId.VISUAL);
+            msg.setTarget(MyApplicationId.MOTION);
+            msg.createTransactionId();
+            int transId = manager.send(msg);
+            
+            // WAIT TO BE DONE
+            
+            
+            
+        }
+        catch(Exception e)
+        {
+            //VA_DEBUG.WARNING("[VISUAL MONITOR] Failed create ProcessVideoDataCommand because wrong data received="+data.toString(), true);
+        }
+    }
+    
     private boolean _handleProcessVideoData(ProcessVideoDataCommand msg)
     {
-        ChannelManager manager = ChannelManager.getInstance();
-        
-        if (manager == null)
-        {
-            VA_DEBUG.WARNING("[VISUAL] ChannelManager is null.", true);
-            return false;
-        }
-        
         if (!manager.isClientRegistered(MyApplicationId.MEMORY))
         {
             VA_DEBUG.WARNING("[VISUAL] MEMORY is not registered.", true);
@@ -141,14 +162,6 @@ public class Visual
     
     private boolean _handlePersonDetectedResponse(ATPMsg msg)
     {
-        ChannelManager manager = ChannelManager.getInstance();
-        
-        if (manager == null)
-        {
-            VA_DEBUG.WARNING("[VISUAL] ChannelManager is null.", true);
-            return false;
-        }
-        
         if (!manager.isClientRegistered(MyApplicationId.MEMORY))
         {
             VA_DEBUG.WARNING("[VISUAL] MEMORY is not registered.", true);

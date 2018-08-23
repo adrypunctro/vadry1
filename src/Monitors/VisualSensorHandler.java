@@ -5,6 +5,7 @@
  */
 package Monitors;
 
+import Clients.Visual;
 import Defines.HeadGestureYes;
 import Defines.ProcessVideoDataCommand;
 import Defines.MyApplicationId;
@@ -40,6 +41,7 @@ public class VisualSensorHandler
         conn.setVideoSensorHandler(this);
     }
     
+    @Override
     public void init()
     {
         manager = ChannelManager.getInstance();
@@ -65,33 +67,9 @@ public class VisualSensorHandler
     {
         CameraCapture capture = (CameraCapture)data;
         System.out.println(capture.toString());
-        final BufferedImage image = capture.image();
-
-        // Person identify
         
-        JFrame frame = new JFrame("ColorPan");
-        frame.getContentPane().add(new JComponent() {
-            @Override
-            public void paint(Graphics g) {
-                g.drawImage(image, 0, 0, this);
-            }
-        });
-        frame.setSize(300, 300);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-        
-        try
-        {
-            HeadGestureYes msg = new HeadGestureYes();
-            msg.setSource(MyApplicationId.VISUAL);
-            msg.setTarget(MyApplicationId.MOTION);
-            msg.createTransactionId();
-            int transId = manager.send(msg);
-        }
-        catch(Exception e)
-        {
-            VA_DEBUG.WARNING("[VISUAL MONITOR] Failed create ProcessVideoDataCommand because wrong data received="+data.toString(), true);
-        }
+        Visual cli = (Visual) manager.getClient(MyApplicationId.VISUAL);
+        cli.handle(capture);
     }
     
     private ChannelManager manager = null;
