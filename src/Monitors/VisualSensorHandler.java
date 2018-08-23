@@ -5,9 +5,9 @@
  */
 package Monitors;
 
-import Messages.HeadGestureYes;
-import Messages.ProcessVideoDataCommand;
-import System.MyApplicationId;
+import Defines.HeadGestureYes;
+import Defines.ProcessVideoDataCommand;
+import Defines.MyApplicationId;
 import System.ChannelManager;
 import System.SensorHandler;
 import System.SensorsConnector;
@@ -22,8 +22,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import System.CameraCapture;
-import System.RaspberryPiCapture;
+import Defines.CameraCapture;
+import Platform.RaspberryPiCapture;
 
 /**
  *

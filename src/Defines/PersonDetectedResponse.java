@@ -3,18 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Messages;
+package Defines;
+
+import Messages.ATPMsg;
 
 /**
  *
  * @author ASimionescu
  */
-public class HeadGestureYes
+public class PersonDetectedResponse
     extends ATPMsg
 {
     
-    public HeadGestureYes() {
-        super(MyMessageType.headGestureYes);
+    public PersonDetectedResponse() {
+        super(MyMessageType.messageResponse);
     }
     
 }

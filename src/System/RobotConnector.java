@@ -5,6 +5,8 @@
  */
 package System;
 
+import Defines.CameraCapture;
+import Platform.RaspberryPiCapture;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;

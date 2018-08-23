@@ -1,9 +1,9 @@
 package Clients;
 
 import Messages.ATPMsg;
-import Messages.MyMessageType;
-import Messages.PersonDetectedResponse;
-import System.MyApplicationId;
+import Defines.MyMessageType;
+import Defines.PersonDetectedResponse;
+import Defines.MyApplicationId;
 import System.ChannelManager;
 import System.Client;
 import System.SensorHandler;

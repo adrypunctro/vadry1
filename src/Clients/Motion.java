@@ -6,11 +6,11 @@
 package Clients;
 
 import Messages.ATPMsg;
-import Messages.MessageResponse;
-import Messages.MyMessageType;
+import Defines.MessageResponse;
+import Defines.MyMessageType;
 import System.ChannelManager;
 import System.Client;
-import System.MyApplicationId;
+import Defines.MyApplicationId;
 import System.OnOffState;
 import System.VA_DEBUG;
 import java.util.Observable;

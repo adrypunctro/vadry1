@@ -3,18 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Messages;
+package Defines;
+
+import Messages.ATPMsg;
 
 /**
  *
  * @author ASimionescu
  */
-public class TouchDetectedCommand
+public class MessageResponse
     extends ATPMsg
 {
     
-    public TouchDetectedCommand() {
-        super(MyMessageType.touchDetectedCommand);
+    public MessageResponse() {
+        super(MyMessageType.messageResponse);
     }
     
 }

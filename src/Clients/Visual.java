@@ -1,9 +1,9 @@
 package Clients;
 
 import Messages.ATPMsg;
-import Messages.MyMessageType;
-import Messages.ProcessVideoDataCommand;
-import System.MyApplicationId;
+import Defines.MyMessageType;
+import Defines.ProcessVideoDataCommand;
+import Defines.MyApplicationId;
 import System.ChannelManager;
 import System.Client;
 import System.OnOffState;

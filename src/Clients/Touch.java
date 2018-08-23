@@ -6,10 +6,10 @@
 package Clients;
 
 import Messages.ATPMsg;
-import Messages.MyMessageType;
+import Defines.MyMessageType;
 import System.ChannelManager;
 import System.Client;
-import System.MyApplicationId;
+import Defines.MyApplicationId;
 import System.OnOffState;
 import System.VA_DEBUG;
 import java.util.Observable;
