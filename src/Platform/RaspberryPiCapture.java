@@ -114,6 +114,18 @@ public class RaspberryPiCapture
         return ss.toString();
     }
     
+    @Override
+    public int getWidth()
+    {
+        return width;
+    }
+    
+    @Override
+    public int getHeight()
+    {
+        return height;
+    }
+    
     public boolean grayscape;
     public int width;
     public int height;

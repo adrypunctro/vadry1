@@ -16,4 +16,7 @@ public interface CameraCapture {
 
     public boolean init(String buff, boolean grayscape);
     public BufferedImage image();
+    
+    public int getWidth();
+    public int getHeight();
 }

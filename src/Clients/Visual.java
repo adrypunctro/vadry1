@@ -16,11 +16,16 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import org.tensorflow.Graph;
+import org.tensorflow.Session;
+import org.tensorflow.Tensor;
+import org.tensorflow.TensorFlow;
 
 
 /*
@@ -40,6 +45,8 @@ public class Visual
     public Visual()
     {
         super(MyApplicationId.VISUAL);
+        
+        VA_DEBUG.INFO("[VISUAL] TensorFlow version = "+TensorFlow.version()+"", true, 3);
     }
     
     
@@ -83,6 +90,30 @@ public class Visual
         final BufferedImage image = capture.image();
 
         // Person identify
+        try (Graph g = new Graph())
+        {
+            final String value = "Hello from " + TensorFlow.version();
+
+            // Construct the computation graph with a single operation, a constant
+            // named "MyConst" with a value "value".
+            try (Tensor t = Tensor.create(value.getBytes("UTF-8")))
+            {
+                // The Java API doesn't yet include convenience functions for adding operations.
+                g.opBuilder("Const", "MyConst").setAttr("dtype", t.dataType()).setAttr("value", t).build();
+            }
+
+            // Execute the "MyConst" operation in a Session.
+            try (Session s = new Session(g);
+                 // Generally, there may be multiple output tensors, all of them must be closed to prevent resource leaks.
+                 Tensor output = s.runner().fetch("MyConst").run().get(0))
+            {
+                System.out.println(new String(output.bytesValue(), "UTF-8"));
+            }
+        }
+        catch(UnsupportedEncodingException e)
+        {
+            
+        }
         
         JFrame frame = new JFrame("ColorPan");
         frame.getContentPane().add(new JComponent() {
@@ -91,7 +122,7 @@ public class Visual
                 g.drawImage(image, 0, 0, this);
             }
         });
-        frame.setSize(300, 300);
+        frame.setSize(capture.getWidth(), capture.getHeight());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         
